@@ -75,6 +75,12 @@ export default class P2BodyEditor {
       this.editConfig("setProperty", "radius", parseFloat(event.target.value));
     });
 
+    // DebugCollider
+    const debugColliderRow = SupClient.table.appendRow(this.tbody, SupClient.i18n.t("componentEditors:P2Body.debugCollider"));
+    this.fields["debugCollider"] = SupClient.table.appendBooleanField(debugColliderRow.valueCell, config.debugCollider);
+    this.fields["debugCollider"].addEventListener("click", (event: any) => {
+      this.editConfig("setProperty", "debugCollider", event.target.checked);
+    });
     this.updateShapeInput(config.shape);
   }
 

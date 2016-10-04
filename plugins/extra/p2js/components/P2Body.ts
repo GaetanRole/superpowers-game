@@ -1,4 +1,5 @@
 const THREE = SupEngine.THREE;
+import P2BodyMarker from "./P2BodyMarker";
 
 export default class P2Body extends SupEngine.ActorComponent {
   body: any;
@@ -8,7 +9,7 @@ export default class P2Body extends SupEngine.ActorComponent {
   offsetX: number;
   offsetY: number;
   shape: string;
-
+  debugCollider: boolean;
   width: number;
   height: number;
   angle: number;
@@ -16,6 +17,7 @@ export default class P2Body extends SupEngine.ActorComponent {
 
   actorPosition = new THREE.Vector3();
   actorAngles = new THREE.Euler();
+  bodyRenderer: P2BodyMarker = null;
 
   constructor(actor: SupEngine.Actor) {
     super(actor, "P2Body");
@@ -55,9 +57,20 @@ export default class P2Body extends SupEngine.ActorComponent {
         this.body.addShape(new (<any>window).p2.Circle({ radius: this.radius }));
       } break;
     }
+
+    this.debugCollider = (config.debugCollider != null) ? config.debugCollider : false;
     this.body.position = [ this.actorPosition.x, this.actorPosition.y ];
     this.body.shapes[0].position = [ this.offsetX, this.offsetY ];
     this.body.angle = this.actorAngles.z + this.angle;
+  }
+
+  private setupBodyRenderer() {
+    this.bodyRenderer = new P2BodyMarker(this.actor);
+    if (this.shape === "box") {
+      this.bodyRenderer.setBox(this.width, this.height);
+    } else if (this.shape === "circle") {
+      this.bodyRenderer.setCircle(this.radius);
+    }
   }
 
   update() {
@@ -67,6 +80,17 @@ export default class P2Body extends SupEngine.ActorComponent {
 
     this.actorAngles.z = this.body.angle - this.angle;
     this.actor.setGlobalEulerAngles(this.actorAngles);
+
+    // Debug collider
+    if (this.debugCollider) {
+      // Lazy initialization
+      if (this.bodyRenderer === null) this.setupBodyRenderer();
+      this.bodyRenderer.setOffset(this.offsetX, this.offsetY);
+      this.bodyRenderer.setAngle((this.angle * 180) / Math.PI);
+    } else if (this.bodyRenderer) {
+      this.bodyRenderer._destroy();
+      this.bodyRenderer = null;
+    }
   }
 
   _destroy() {

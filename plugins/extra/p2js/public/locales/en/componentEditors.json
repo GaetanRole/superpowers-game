@@ -5,6 +5,7 @@
     "fixedRotation": "Fixed rotation",
     "offset": "Offset",
     "angle": "Angle",
+    "debugCollider": "debugCollider",
     "shape": "Shape",
     "shapeOptions": {
       "box": "Box",

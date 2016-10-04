@@ -9,6 +9,7 @@ export interface P2BodyConfigPub {
   width: number;
   height: number;
   angle: number;
+  debugCollider: boolean;
   radius: number;
   length: number;
 }
@@ -26,6 +27,7 @@ export default class P2BodyConfig extends SupCore.Data.Base.ComponentConfig {
     width: { type: "number", min: 0, mutable: true },
     height: { type: "number", min: 0, mutable: true },
     angle: { type: "number", min: -360, max: 360, mutable: true },
+    debugCollider: { type: "boolean", mutable: true },
     radius: { type: "number", min: 0, mutable: true }
   };
 
@@ -41,6 +43,7 @@ export default class P2BodyConfig extends SupCore.Data.Base.ComponentConfig {
       width: 1,
       height: 1,
       angle: 0,
+      debugCollider: false,
       radius: 1,
       length: 1
     };
